@@ -9,10 +9,11 @@ DEFAULT_QUERRY_ARGS = dict(k=1, eps=0, p=2, distance_upper_bound=np.inf)
 
 @xr.register_dataarray_accessor('xmap')
 class XMap(object):
-    def __init__(self, xarray_obj):
+    def __init__(self, xarray_obj, debug=False):
         self._obj = xarray_obj
         self._kdtree = None
         self.kdtree_options = {}
+        self.debug=debug
 
         self._shape2d = ()
 
@@ -152,7 +153,8 @@ class XMap(object):
         new_dims, new_coords = self._extract_new_dims_and_coords(target,
                                                                  xcoord,
                                                                  ycoord)
-        print('------->', new_dims, new_coords)
+        if self.debug:
+            print('------->', new_dims, new_coords)
         return xr.DataArray(new, dims=new_dims, coords=new_coords)
 
     def _remap_bilinear(self, target, xcoord=None, ycoord=None, **kwargs):
